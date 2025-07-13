@@ -1,17 +1,20 @@
 import { Button } from 'antd'
 import {Link} from 'react-router-dom'
+import './home.css'
 // https://tailwindcss.com/docs/installation/tailwind-cli
 export default function Home() {
-    return <div class="flex flex-wrap justify-self-center ">
-        <div class="">
-            <Link to="/xlsx" >筛选列表值并按要求导出文件</Link>
-            <Button
-                type="primary"
-                size="large"
-                onClick={() => {  }}>筛选列表值并按要求导出文件</Button>
-        </div>
-        <div class="justify-self-center">
-            <Button type="primary" size="large">数据分析（暂时不做）</Button>
-        </div>
+    return <div className="split-page">
+  <Link to="/xlsx" className="split-link personal">
+    <div className="link-content">
+      <h2>按要求导出excel文件</h2>
+      <p>其中包含筛选、重新排序等功能</p>
     </div>
+  </Link>
+  <Link to="/analysis" className="split-link enterprise">
+    <div className="link-content">
+      <h2>数据分析</h2>
+      <p>有这个计划，但目前不做</p>
+    </div>
+  </Link>
+  </div>
 }

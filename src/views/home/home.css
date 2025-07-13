@@ -1,0 +1,78 @@
+/* 确保页面基础样式重置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden; /* 防止页面出现滚动条 */
+}
+
+.split-page {
+  display: flex;
+  width: 100vw; /* 占满整个视口宽度 */
+  height: 100vh; /* 占满整个视口高度 */
+}
+
+.split-link {
+  flex: 1; /* 左右各占50%宽度 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: white;
+  padding: 40px;
+  transition: all 0.3s ease; /* 平滑过渡效果 */
+  min-width: 0; /* 解决内容溢出问题 */
+}
+
+/* 左右不同背景色 */
+.split-link.personal {
+  background: #4f46e5;
+}
+
+.split-link.enterprise {
+  background: #10b981;
+}
+
+/*  hover效果优化 */
+.split-link:hover {
+  flex: 1.05; /* 轻微放大，避免过度挤压另一侧 */
+  transform: scale(1.02); /* 内部内容轻微放大，增强反馈 */
+  z-index: 1; /* 确保hover的一侧在上方 */
+}
+
+.link-content {
+  text-align: center;
+  max-width: 500px; /* 限制内容最大宽度，避免在宽屏上过于拉伸 */
+  padding: 20px;
+}
+
+.link-content h2 {
+  font-size: 28px;
+  margin-bottom: 12px;
+  transition: all 0.3s;
+}
+
+.link-content p {
+  font-size: 16px;
+  opacity: 0.9;
+  transition: all 0.3s;
+}
+
+/* 响应式调整，在小屏幕上优化显示 */
+@media (max-width: 768px) {
+  .split-page {
+    flex-direction: column; /* 小屏幕下改为上下布局 */
+  }
+  
+  .link-content h2 {
+    font-size: 24px;
+  }
+  
+  .link-content p {
+    font-size: 14px;
+  }
+}
