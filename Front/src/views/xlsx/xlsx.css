@@ -1,0 +1,110 @@
+/* step外层的盒子 */
+.outside-box{
+    max-width:1000px;
+    /* min-height:600px; */
+    margin: 50px auto 0px auto;
+    
+}
+/* step进度条 */
+.step{
+    margin-bottom:40px;
+}
+
+
+
+/* upload的相关样式 */
+.upload-title {
+  font-size: 18px;         
+  font-weight: 500;
+  color: #333; 
+  margin-bottom: 16px;
+  padding-left: 8px; 
+  display: flex;  
+  align-items: center;  
+}
+.upload-card {
+    max-width: 380px;
+    /* width: 80%; */
+    height: 100%;
+    /* max-width: 380px; */
+    /* margin: -10px auto!important; */
+    margin:0px;
+    border-radius: 8px;
+    padding: 0 24px;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+.ant-upload-list-item {
+    display: none !important;
+}
+.upload-card:hover {
+    border-color: #3b82f6;
+}
+.upload-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.upload-icon {
+    font-size: 36px;
+    color: #6b7280;
+    margin-bottom: 12px;
+}
+
+
+.upload-subtitle {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 16px;
+}
+
+.uploaded-file {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 8px 12px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    margin-top: 12px;
+}
+.file-icon {
+    font-size: 16px;
+    color: #3b82f6;
+    margin-right: 8px;
+}
+.file-name {
+    font-size: 14px;
+    color: #1f2937;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 280px;
+}
+
+.button-box {
+    margin-top: 24px;
+    /* width:10000px; */
+    max-height:200px;
+    /* border:1px solid red; */
+    text-align: center;
+}
+
+
+.param-box{
+    border:1px solid #dcdfe6;
+    border-radius: 8px;
+    padding:10px;
+    margin-bottom: 30px;
+    box-shadow: 0px 0px 10px #cfd0d3;
+
+}
+.template-title{
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 16px;
+}
+.mt {
+  margin-top: 16px;
+  margin-bottom: 0px;
+}
