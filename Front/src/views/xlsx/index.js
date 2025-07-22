@@ -1,16 +1,19 @@
-import React, { useState, useReducer, useEffect, useCallback } from 'react'
+import { useState, useReducer } from 'react'
+import axios from 'axios'
 import {
   Button,
   message,
   Steps,
   theme
 } from 'antd';
+
 import { retrieveInitState, RetrieveReducer, RetrieveContext } from './index.context';
+
 
 import './xlsx.css';
 import ExcelUpload from './ExcelUpload';
-import SetParam from './SetParam'
-import SetHeader from './SetHeader.js'
+import SetHeader from './SetHeader';
+import SetParam from './SetParam';
 
 
 const steps = [
@@ -62,7 +65,6 @@ export default function XlsxConduct(props) {
     <div className="outside-box">
       <Steps className="step" current={current} items={items} />
       {steps[current].content}
-      {/* <div style={contentStyle}>{steps[current].content}</div> */}
       <div className="button-box">
         {current > 0 && (
           <Button style={{ marginRight: '10px' }} onClick={() => prev()}>
@@ -70,13 +72,33 @@ export default function XlsxConduct(props) {
           </Button>
         )}
         {current < steps.length - 1 && (
-          <Button style={{ marginRight: '10px' }} type="primary" onClick={() => { next(); console.log(state) }}>
+          <Button style={{ marginRight: '10px' }} type="primary" onClick={() => { next()}}>
             下一步
           </Button>
         )}
         {current === steps.length - 1 && (
-          <Button type="primary" onClick={() => message.success('Processing complete!')}>
-            完成
+          <Button type="primary" onClick={() => {
+
+            // 把headers从对象变为数组
+            let headers=[]
+            state.headers.forEach(item => {headers.push(item.columns)}) 
+
+            const formData = new FormData();
+            formData.append("excelFile", state.excelFile)
+            formData.append("headers", JSON.stringify(headers))
+            formData.append("params", JSON.stringify(state.params))
+
+
+            axios.post('http://localhost:8000/excel/upload',formData,{
+              headers:{
+                'Content-Type': 'multipart/form-data',
+              }
+            }).then(res=>{window.open(res.data.url)})
+
+            message.success('Processing complete!')
+
+          }}>
+            完成并下载EXCEL文件
           </Button>
         )}
       </div>

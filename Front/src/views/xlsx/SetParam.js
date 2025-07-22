@@ -7,7 +7,8 @@ import {
   Space,
   Input,
   Button,
-  Radio
+  Radio,
+  message
 } from 'antd';
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { useRetrieveContext } from './index.context';
@@ -22,9 +23,9 @@ const template_data = [
   },
   {
     id: 1,
-    label: 'hxy处理xxx数据',
+    label: 'TEST模版',
     params: [
-      { column: "MEMBERID", operator: "c", value: 'bb' }]
+      { column: "MEMBERID", operator: "c", value: 'N' }]
   }
 ]
 export default function SetParam() {
@@ -39,6 +40,7 @@ export default function SetParam() {
   const onFinish = (values) => {
   console.log('筛选条件:', values);
   setState({params: values.filters})
+  message.success('筛选条件设置成功!')
 };
 
   return <div className="upload-box">
@@ -49,20 +51,19 @@ export default function SetParam() {
         style={{ marginLeft: '30px' }}
         onChange={(e) => {
           let id = e.target.value
+          if (id === template_id) return;
           setState({ template_id: id, params: template_data[id].params })
-          console.log(template_data[id].params)
           form.setFieldValue('filters', template_data[id].params)
         }}
         value={template_id}
       >
         {
           template_data.map(({ id, label }) => {
-            return <Radio.Button value={id} >{label}</Radio.Button>
+            return <Radio.Button key={id} value={id} >{label}</Radio.Button>
           }
           )}
 
       </Radio.Group>
-      {/* </div> */}
     </div>
     {columns.length > 0 && (
       <Form
@@ -71,18 +72,11 @@ export default function SetParam() {
         onFinish={onFinish}
         layout="vertical"
         initialValues={{ filters: params }}
-        onFieldsChange={(value) => {
-          console.log(value)
-          setState({ params: value.filters })
-        }}
+        onFieldsChange={(value) => {setState({ params: value.filters })}}
       >
         <Form.Item
           name="filters"
-          label={
-            <>
-              <span className="upload-title mt">筛选条件</span>
-              
-            </>}
+          label={<span className="upload-title mt">筛选条件</span>}
         >
           <Form.List name="filters" className='ml'>
             {(fields, { add, remove }) => (
@@ -118,7 +112,7 @@ export default function SetParam() {
                           placeholder="操作符"
                           options={[
                             { value: "c", label: "包含" },
-                            { value: "notContains", label: "不包含" },
+                            { value: "nc", label: "不包含" },
                             { value: "=", label: "等于" },
                             { value: ">", label: "大于" },
                             { value: "<", label: "小于" },
@@ -146,11 +140,10 @@ export default function SetParam() {
 
                 {/* 添加按钮始终占满一行 */}
                 <Col span={24} style={{ marginTop: 8 }}>
-                  <Button color="cyan"  variant="dashed" onClick={() => add()} icon={<PlusOutlined />}>
+                  <Button color="primary"  variant="dashed" onClick={() => add()} icon={<PlusOutlined />}>
                     添加筛选条件
                   </Button>
-                  {/* style={{marginTop:'20px'}} type="dashed"*/}
-                  <Button variant="text" type="link" htmlType="submit">
+                  <Button danger type="text" htmlType="submit">
                     点击此处保存配置
                     </Button>
                 </Col>

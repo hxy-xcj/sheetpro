@@ -1,7 +1,8 @@
-import { Upload, message } from 'antd';
+import { Upload ,message} from 'antd';
 import * as XLSX from 'xlsx';
 import { InboxOutlined } from '@ant-design/icons';
 import { useRetrieveContext } from './index.context';
+
 
 
 const { Dragger } = Upload;
@@ -17,41 +18,51 @@ export default function ExcelUpload() {
     setState
   } = useRetrieveContext();
 
+
+
+
   // 处理文件上传
-  const handleFileChange = ({ fileList }) => {
-    if (fileList.length > 0) {
-      const file = fileList[0].originFileObj;
-      setState({excelFile:file});
-      parseExcel(file);
-    } else {
-      setState({excelFile:null});
-      setState({columns:[]});
+
+  const parseExcel = async (file) => {
+    try {
+      const data = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(new Uint8Array(e.target.result));
+        reader.onerror = (e) => reject(new Error('文件读取失败'));
+        reader.readAsArrayBuffer(file);
+      });
+
+      const workbook = XLSX.read(data, { type: 'array' });
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
+      const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+      if (json.length > 0) {
+        const headers = json[0];
+        await setState({
+          columns: headers,
+          headers: headers.map((item, index) => ({ key: index, columns: item })),
+        });
+      message.success('excel解析成功')
+      }
+    } catch (error) {
+      message.error('excel解析失败')
+      console.error(error);
     }
   };
-  const parseExcel = (file) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const firstSheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheetName];
 
-        // 转换为 JSON 获取表头
-        const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-        if (json.length > 0) {
-          const headers = json[0]; // 第一行是表头
-          setState({columns:headers});
-          message.success('Excel 文件解析成功');
-        }
-      } catch (error) {
-        message.error('Excel 解析失败，请检查文件格式');
-        console.error(error);
-      }
-    };
-    reader.readAsArrayBuffer(file);
+    const handleFileChange = async({ fileList }) => {
+    
+    if (fileList.length > 0) {
+      const file = fileList[0].originFileObj;
+      await setState({excelFile:file});
+      await parseExcel(file);
+    } else {
+      await setState({excelFile:null,columns:[]});
+    }
+    // setTimeout(()=>{},0)
+    
   };
-
 
   return <>
       <Dragger
@@ -60,7 +71,7 @@ export default function ExcelUpload() {
         multiple={false}
         beforeUpload={() => false}
         fileList={excelFile ? [excelFile] : []}
-        onChange={handleFileChange}
+        onChange={handleFileChange }
       >
         <div className="upload-content">
           <div className="upload-icon">
@@ -79,6 +90,5 @@ export default function ExcelUpload() {
           )}
         </div>
        </Dragger> 
-     {/* </div>  */}
   </>
 }

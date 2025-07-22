@@ -32,15 +32,13 @@ const DragHandle = () => {
 };
 const columns = [
     { key: 'sort', align: 'center', width: 80, render: () => <DragHandle /> },
-    { title: 'Name', dataIndex: 'name' },
-    { title: 'Age', dataIndex: 'age' },
-    { title: 'Address', dataIndex: 'address' },
+    { title: '列名', dataIndex: 'columns' },
 ];
-const initialData = [
-    { key: '1', name: 'John Brown', age: 32, address: 'Long text Long' },
-    { key: '2', name: 'Jim Green', age: 42, address: 'London No. 1 Lake Park' },
-    { key: '3', name: 'Joe Black', age: 32, address: 'Sidney No. 1 Lake Park' },
-];
+// const initialData = [
+//     { key: '1', name: 'John Brown', age: 32, address: 'Long text Long' },
+//     { key: '2', name: 'Jim Green', age: 42, address: 'London No. 1 Lake Park' },
+//     { key: '3', name: 'Joe Black', age: 32, address: 'Sidney No. 1 Lake Park' },
+// ];
 const Row = props => {
     const {
         attributes,
@@ -75,28 +73,30 @@ export default function SetHeader() {
         headers,
         setState
     } = useRetrieveContext();
-    const [dataSource, setDataSource] = React.useState(initialData);
+    console.log(headers)
+
+    // const [dataSource, setDataSource] = React.useState(initialData);
     const onDragEnd = ({ active, over }) => {
         if (active.id !== (over === null || over === void 0 ? void 0 : over.id)) {
-            setDataSource(prevState => {
-                const activeIndex = prevState.findIndex(
+                const activeIndex = headers.findIndex(
                     record => record.key === (active === null || active === void 0 ? void 0 : active.id),
                 );
-                const overIndex = prevState.findIndex(
+                const overIndex = headers.findIndex(
                     record => record.key === (over === null || over === void 0 ? void 0 : over.id),
                 );
-                return arrayMove(prevState, activeIndex, overIndex);
-            });
+                let newState = arrayMove(headers, activeIndex, overIndex)
+                setState({headers:newState}) ;
         }
     };
+    
     return (
         <DndContext modifiers={[restrictToVerticalAxis]} onDragEnd={onDragEnd}>
-            <SortableContext items={dataSource.map(i => i.key)} strategy={verticalListSortingStrategy}>
+            <SortableContext items={headers.map(i => i.key)} strategy={verticalListSortingStrategy}>
                 <Table
                     rowKey="key"
                     components={{ body: { row: Row } }}
                     columns={columns}
-                    dataSource={dataSource}
+                    dataSource={headers}
                 />
             </SortableContext>
         </DndContext>
